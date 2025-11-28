@@ -1,89 +1,64 @@
+const rockBtn = document.querySelector(".rock");
+const paperBtn = document.querySelector(".paper");
+const scissorsBtn = document.querySelector(".scissors");
+const display = document.querySelector(".display");
+const playerDisplay = document.querySelector(".player-score");
+const computerDisplay = document.querySelector(".computer-score");
+
 let humanScore = 0;
 let computerScore = 0;
 
-playGame();
+rockBtn.addEventListener('click', () => playRound('rock'));
+paperBtn.addEventListener('click', () => playRound('paper'));
+scissorsBtn.addEventListener('click', () => playRound('scissors'));
+
+prompt("Make a choice to start game. First to 5 wins. Good luck.")
+
 
 function getComputerChoice(){
     let randomInt = Math.floor(Math.random() * 3) + 1;
-    switch (randomInt){
-        case 1:
-            return "rock";
-            break;
-        case 2:
-            return "paper";
-            break;
-        case 3:
-            return "scissors";
-            break;
-    }
+    return randomInt === 1 ? 'rock' : randomInt === 2 ? 'paper' : 'scissors';
 }
 
 
-function getHumanChoice(){
-    let input = prompt(`Please pick "1" for Rock, "2" for Paper or "3" Scissors.`);
-    switch (input){
-        case "1":
-            return "rock";
-            break;
-        case "2":
-            return "paper";
-            break;
-        case "3":
-            return "scissors";
-            break;
-    }
-}
-
-
-function playRound(){
-    const humanChoice = getHumanChoice();
+function playRound(humanChoice){
     const computerChoice = getComputerChoice();
 
     if (humanChoice === computerChoice){
-        console.log("It's a tie.");
-        return;
+      display.textContent = `Tie: both chose ${humanChoice}.`;
+      displayScore();
+      return;
     }
-    else if (humanChoice === "rock" && computerChoice === "paper"){
-        console.log("You lose, paper beats rock.");
-        computerScore++;
-        return;
+    if (humanChoice === "rock" && computerChoice === "paper" ||
+        humanChoice === "paper" && computerChoice === "scissors" ||
+        humanChoice === "scissors" && computerChoice === "rock"){
+      computerScore++;
+      display.textContent = `You lose: ${computerChoice} beats ${humanChoice}.`;
+      displayScore();
+    } else {
+      humanScore++;
+      display.textContent = `You win: ${humanChoice} beats ${computerChoice}.`;
+      displayScore();
     }
-    else if (humanChoice === "rock" && computerChoice === "scissors"){
-        console.log("You win, rock beats scissors.");
-        humanScore++;
-        return;
+
+    if (humanScore === 5) {
+      display.textContent = 'You reached 5 wins — you win the match!';
+      displayScore();
+      disableButtons();
+    } else if (computerScore === 5) {
+      display.textContent = 'Computer reached 5 wins — you lost the match.';
+      displayScore();
+      disableButtons();
     }
-    else if (humanChoice === "paper" && computerChoice === "rock"){
-        console.log("You win, paper beats rock.");
-        humanScore++;
-        return;
-    }
-    else if (humanChoice === "paper" && computerChoice === "scissors"){
-        console.log("You lose, scissors beats paper.");
-        computerScore++;
-        return;
-    }
-    else if (humanChoice === "scissors" && computerChoice === "rock"){
-        console.log("You lose, rock beats scissors.");
-        computerScore++;
-        return;
-    }
-    else if (humanChoice === "scissors" && computerChoice === "paper"){
-        console.log("You win, scissors beats paper.");
-        humanScore++;
-        return;
-    }
-}
+  }
 
 
-function playGame(){
-    while (humanScore < 5 && computerScore < 5){
-        playRound();
-    }
-    if (humanScore === 5){
-        console.log(`You won 5 games and are declared the winner!`);
-    }
-    else if (computerScore === 5){
-        console.log(`The computer has won 5 games and you have lost.`);
-    }
+function disableButtons(){
+    rockBtn.disabled = paperBtn.disabled = scissorsBtn.disabled = true;
+} 
+
+
+function displayScore() {
+    playerDisplay.textContent = `Player Score: ${humanScore}`;
+    computerDisplay.textContent = `Computer Score: ${computerScore}`;
 }
