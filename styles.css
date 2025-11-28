@@ -1,0 +1,16 @@
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+button {
+    width: 30rem;
+    height: 10rem;
+    border-radius: 20px;
+    background-color: lightgray;
+}
+
+.display {
+    display: block;
+}
